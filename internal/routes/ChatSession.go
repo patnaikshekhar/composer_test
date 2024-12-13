@@ -19,16 +19,11 @@ func RegisterChatSessionRoutes(e *echo.Echo, database *db.Db) {
 
 func createChatSession(database *db.Db) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var chatSession models.ChatSession
-		if err := c.Bind(&chatSession); err != nil {
-			return c.JSON(http.StatusBadRequest, err)
-		}
-
-		if err := database.InsertChatSession(&chatSession); err != nil {
+		if err := database.InsertChatSession(&models.ChatSession{}); err != nil {
 			return c.JSON(http.StatusInternalServerError, err)
 		}
 
-		return c.JSON(http.StatusCreated, chatSession)
+		return c.JSON(http.StatusCreated, nil)
 	}
 }
 

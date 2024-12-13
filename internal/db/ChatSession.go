@@ -4,14 +4,15 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"time"
+	"log"
 
 	"composer/internal/models"
 )
 
 func (d *Db) InsertChatSession(chatSession *models.ChatSession) error {
-	query := `INSERT INTO chat_sessions (title, created_at) VALUES (?, ?)`
-	result, err := d.conn.Exec(query, chatSession.Title, time.Now())
+	query := `INSERT INTO chat_sessions (title) VALUES (?)`
+	log.Printf("Running query %s", query)
+	result, err := d.conn.Exec(query, chatSession.Title)
 	if err != nil {
 		return err
 	}

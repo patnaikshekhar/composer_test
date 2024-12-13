@@ -13,7 +13,31 @@ type Db struct {
 
 func New(relationDBToUse, connectionString string) (*Db, error) {
 
-	createTables := []string{}
+	createTables := []string{
+		`
+	CREATE TABLE IF NOT EXISTS chat_sessions (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		title,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	)`,
+
+		`
+	CREATE TABLE IF NOT EXISTS chat_messages (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		session_id TEXT NOT NULL,
+		role TEXT NOT NULL,
+		content TEXT NOT NULL,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	)`,
+
+		`
+	CREATE TABLE IF NOT EXISTS documents (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		contents TEXT NOT NULL,
+		last_modified_by TEXT NOT NULL,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	)`,
+	}
 
 	conn, err := sql.Open(relationDBToUse, connectionString)
 	if err != nil {
@@ -30,30 +54,4 @@ func New(relationDBToUse, connectionString string) (*Db, error) {
 	return &Db{
 		conn: conn,
 	}, nil
-}
-
-func (d *Db) CreateChatSessionTable() error {
-	query := `
-	CREATE TABLE IF NOT EXISTS chat_sessions (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		title TEXT NOT NULL,
-		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-	)`
-
-	_, err := d.conn.Exec(query)
-	return err
-}
-
-func (d *Db) CreateChatMessageTable() error {
-	query := `
-	CREATE TABLE IF NOT EXISTS chat_messages (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		session_id TEXT NOT NULL,
-		role TEXT NOT NULL,
-		content TEXT NOT NULL,
-		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-	)`
-
-	_, err := d.conn.Exec(query)
-	return err
 }
