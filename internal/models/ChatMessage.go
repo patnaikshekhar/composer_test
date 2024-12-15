@@ -7,5 +7,6 @@ type ChatMessage struct {
 	SessionID string    `json:"session_id"`
 	Role      string    `json:"role"`
 	Content   string    `json:"content"`
+	Doc       string    `json:"doc"`
 	CreatedAt time.Time `json:"created_at"`
 }

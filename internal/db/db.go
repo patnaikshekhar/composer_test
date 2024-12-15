@@ -26,7 +26,8 @@ func New(relationDBToUse, connectionString string) (*Db, error) {
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		session_id TEXT NOT NULL,
 		role TEXT NOT NULL,
-		content TEXT NOT NULL,
+		content TEXT,
+		doc TEXT,
 		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 	)`,
 

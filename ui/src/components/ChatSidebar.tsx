@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Search, History } from 'lucide-react'
+import { ChatMessage } from '@/models'
 
 // Mock data for chat history
 const mockChatHistory = [
@@ -14,25 +15,22 @@ const mockChatHistory = [
   { id: 5, title: "Document 5 - Project Outline", date: "2023-06-05" },
 ]
 
-export default function ChatSidebar() {
-  const [message, setMessage] = useState('')
-  const [chatMessages, setChatMessages] = useState([
-    { role: 'assistant', content: 'Hello! How can I assist you with your document today?' }
-  ])
-  const [searchTerm, setSearchTerm] = useState('')
+type SideBarProps = {
+  onSendMessage: (message: string) => void
+  chatMessages: ChatMessage[]
+}
 
-  const handleSendMessage = () => {
-    if (message.trim()) {
-      setChatMessages([...chatMessages, { role: 'user', content: message }])
-      setMessage('')
-      // Here you would typically send the message to your AI backend
-      // and then add the AI's response to the chat messages
-    }
-  }
-
+export default function ChatSidebar({ onSendMessage, chatMessages }: SideBarProps) {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [message, setMessage] = useState('');
   const filteredHistory = mockChatHistory.filter(chat => 
     chat.title.toLowerCase().includes(searchTerm.toLowerCase())
   )
+
+  const sendMessage = () => {
+    onSendMessage(message);
+    setMessage('')
+  }
 
   return (
     <div className="w-80 bg-background border-r border-border flex flex-col">
@@ -69,7 +67,7 @@ export default function ChatSidebar() {
       </div>
       <ScrollArea className="flex-grow p-4">
         {chatMessages.map((msg, index) => (
-          <div key={index} className={`mb-4 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
+          <div key={index} className={`mb-4 ${msg.role === 'human' ? 'text-right' : 'text-left'}`}>
             <div className={`inline-block p-2 rounded-lg ${msg.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}>
               {msg.content}
             </div>
@@ -82,9 +80,9 @@ export default function ChatSidebar() {
           placeholder="Type your message..."
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+          onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
         />
-        <Button onClick={handleSendMessage} className="mt-2 w-full">Send</Button>
+        <Button onClick={sendMessage} className="mt-2 w-full">Send</Button>
       </div>
     </div>
   )

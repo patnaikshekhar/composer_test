@@ -10,20 +10,22 @@ import (
 )
 
 func RegisterChatSessionRoutes(e *echo.Echo, database *db.Db) {
-	e.POST("/chat-sessions", createChatSession(database))
-	e.GET("/chat-sessions", listChatSessions(database))
-	e.GET("/chat-sessions/:id", getChatSession(database))
-	e.PUT("/chat-sessions/:id", updateChatSession(database))
-	e.DELETE("/chat-sessions/:id", deleteChatSession(database))
+	e.POST("/api/chat-sessions", createChatSession(database))
+	e.GET("/api/chat-sessions", listChatSessions(database))
+	e.GET("/api/chat-sessions/:id", getChatSession(database))
+	e.PUT("/api/chat-sessions/:id", updateChatSession(database))
+	e.DELETE("/api/chat-sessions/:id", deleteChatSession(database))
 }
 
 func createChatSession(database *db.Db) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		if err := database.InsertChatSession(&models.ChatSession{}); err != nil {
+		session := models.ChatSession{}
+
+		if err := database.InsertChatSession(&session); err != nil {
 			return c.JSON(http.StatusInternalServerError, err)
 		}
 
-		return c.JSON(http.StatusCreated, nil)
+		return c.JSON(http.StatusCreated, session)
 	}
 }
 

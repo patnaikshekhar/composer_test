@@ -25,7 +25,7 @@ func main() {
 	}
 
 	llm, err := anthropic.New(
-		anthropic.WithModel("claude-3-5-sonnet-20240620"),
+		anthropic.WithModel("claude-3-5-sonnet-latest"),
 	)
 	if err != nil {
 		e.Logger.Fatal(err)
