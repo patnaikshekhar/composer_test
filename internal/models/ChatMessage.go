@@ -8,5 +8,6 @@ type ChatMessage struct {
 	Role      string    `json:"role"`
 	Content   string    `json:"content"`
 	Doc       string    `json:"doc"`
+	Diff      string    `json:"diff"`
 	CreatedAt time.Time `json:"created_at"`
 }

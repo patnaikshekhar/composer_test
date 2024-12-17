@@ -28,6 +28,7 @@ func New(relationDBToUse, connectionString string) (*Db, error) {
 		role TEXT NOT NULL,
 		content TEXT,
 		doc TEXT,
+		diff TEXT,
 		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 	)`,
 

@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label"
 import ReactMarkdown from 'react-markdown'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import Editor from '@monaco-editor/react'
 
 interface DocumentEditorProps {
   document: string;
@@ -15,6 +16,11 @@ interface DocumentEditorProps {
 
 export default function DocumentEditor({ document, onDocumentChange }: DocumentEditorProps) {
   const [isEditing, setIsEditing] = useState(false)
+  const handleEditorChange = (value: string | undefined) => {
+    if (value !== undefined) {
+      onDocumentChange(value)
+    }
+  }
 
   return (
     <div className="flex-grow p-8 overflow-auto">
@@ -32,20 +38,26 @@ export default function DocumentEditor({ document, onDocumentChange }: DocumentE
         </div>
         <div className="relative">
           {isEditing ? (
-            <SyntaxHighlighter
-              language="markdown"
-              style={atomDark}
-              customStyle={{
-                width: '100%',
-                height: 'calc(100vh - 200px)',
-                padding: '1rem',
-                borderRadius: '0.375rem',
-                fontSize: '0.875rem',
-                lineHeight: '1.25rem',
+            <Editor
+              height="calc(100vh - 200px)"
+              defaultLanguage="markdown"
+              value={document}
+              theme="vs-dark"
+              onChange={handleEditorChange}
+              options={{
+                minimap: { enabled: false },
+                fontSize: 14,
+                lineNumbers: 'on',
+                wordWrap: 'on',
+                wrappingIndent: 'indent',
+                lineDecorationsWidth: 10,
+                lineNumbersMinChars: 0,
+                glyphMargin: false,
+                folding: false,
+                scrollBeyondLastLine: false,
+                automaticLayout: true,
               }}
-            >
-              {document}
-            </SyntaxHighlighter>
+            />
           ) : (
             <div className="prose dark:prose-invert max-w-none">
               <ReactMarkdown
@@ -78,3 +90,4 @@ export default function DocumentEditor({ document, onDocumentChange }: DocumentE
     </div>
   )
 }
+

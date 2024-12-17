@@ -50,7 +50,10 @@ export default function App() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ content: message })
+        body: JSON.stringify({ 
+          content: message,
+          artifact: artifact,
+        })
       });
 
       // Get message from response stream
@@ -98,7 +101,7 @@ export default function App() {
           <h1 className="text-2xl font-bold">Composer</h1>
           <div />
         </header>
-        <DocumentEditor document={artifact} />
+        <DocumentEditor document={artifact} onDocumentChange={(doc) => setArtifact(doc)} />
       </div>
     </div>
   )
